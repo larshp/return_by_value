@@ -7,18 +7,19 @@ public section.
   types:
     ty_table_type TYPE STANDARD TABLE OF usr02 WITH DEFAULT KEY .
 
-  methods EXPORTING
+  methods CONSTRUCTOR
     importing
-      !IV_ROWS type I
+      !IV_ROWS type I .
+  methods EXPORTING
     exporting
       !ET_VALUES type TY_TABLE_TYPE .
   methods RETURN_BY_VALUE
-    importing
-      !IV_ROWS type I
     returning
       value(RT_VALUES) type TY_TABLE_TYPE .
 protected section.
 private section.
+
+  data MV_ROWS type I .
 ENDCLASS.
 
 
@@ -26,11 +27,18 @@ ENDCLASS.
 CLASS ZCL_RETURN_TEST IMPLEMENTATION.
 
 
+  METHOD constructor.
+
+    mv_rows = iv_rows.
+
+  ENDMETHOD.
+
+
   METHOD exporting.
 
     FIELD-SYMBOLS: <ls_value> LIKE LINE OF et_values.
 
-    DO iv_rows TIMES.
+    DO mv_rows TIMES.
       APPEND INITIAL LINE TO et_values ASSIGNING <ls_value>.
       <ls_value>-bname = sy-index.
     ENDDO.
@@ -42,10 +50,18 @@ CLASS ZCL_RETURN_TEST IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_value> LIKE LINE OF rt_values.
 
-    DO iv_rows TIMES.
+    DO mv_rows TIMES.
       APPEND INITIAL LINE TO rt_values ASSIGNING <ls_value>.
       <ls_value>-bname = sy-index.
     ENDDO.
+
+*    DATA: lt_values LIKE rt_values.
+*    DO 100000 TIMES.
+*      APPEND INITIAL LINE TO lt_values ASSIGNING <ls_value>.
+*      <ls_value>-bname = sy-index.
+*    ENDDO.
+*
+*break-point.
 
   ENDMETHOD.
 ENDCLASS.

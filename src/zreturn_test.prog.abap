@@ -1,15 +1,8 @@
-*&---------------------------------------------------------------------*
-*& Report ZRETURN_TEST
-*&---------------------------------------------------------------------*
-*&
-*&---------------------------------------------------------------------*
 REPORT zreturn_test.
 
 PARAMETERS: p_rows  TYPE i OBLIGATORY DEFAULT 500000,
-            p_times TYPE i OBLIGATORY DEFAULT 20.
+            p_times TYPE i OBLIGATORY DEFAULT 1.
 
-* USR02 = ~500 characters = 1 kb rows
-* 500000 rows = 500mb ?
 
 START-OF-SELECTION.
   PERFORM run.
@@ -32,7 +25,8 @@ FORM run.
 
   DATA: lo_return TYPE REF TO zcl_return_test,
         lt_tab    TYPE zcl_return_test=>ty_table_type,
-        lv_foo    TYPE c LENGTH 20,
+        lt_tab2   TYPE zcl_return_test=>ty_table_type,
+        lv_lines  TYPE c LENGTH 20,
         exporting TYPE i,
         returning TYPE i,
         t1        TYPE i,
@@ -40,21 +34,20 @@ FORM run.
         elapsed   TYPE i.
 
 
-  CREATE OBJECT lo_return.
+  CREATE OBJECT lo_return EXPORTING iv_rows = p_rows.
   WRITE: / p_rows, 'rows'.
   WRITE: /.
 
   DO p_times TIMES.
     _start.
-    lt_tab = lo_return->return_by_value( p_rows ).
-    WRITE lines( lt_tab ) TO lv_foo.
+    lt_tab = lo_return->return_by_value( ).
+    lv_lines = lines( lt_tab ).
     _stop 'return'.
     returning = returning + elapsed.
 
     _start.
-    lo_return->exporting( EXPORTING iv_rows = p_rows
-                          IMPORTING et_values = lt_tab ).
-    WRITE lines( lt_tab ) TO lv_foo.
+    lo_return->exporting( IMPORTING et_values = lt_tab ).
+    lv_lines = lines( lt_tab ).
     _stop 'exporting'.
     exporting = exporting + elapsed.
   ENDDO.
