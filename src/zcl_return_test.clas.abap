@@ -1,21 +1,22 @@
-CLASS zcl_return_test DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+class ZCL_RETURN_TEST definition
+  public
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    TYPES ty_table_type TYPE STANDARD TABLE OF usr02 WITH DEFAULT KEY.
+  types:
+    ty_table_type TYPE STANDARD TABLE OF usr02 WITH DEFAULT KEY .
 
-    METHODS exporting
-      IMPORTING
-        !iv_count        TYPE i
-      EXPORTING
-        VALUE(et_values) TYPE ty_table_type .
-    METHODS return_by_value
-      IMPORTING
-        !iv_count        TYPE i
-      RETURNING
-        VALUE(rt_values) TYPE ty_table_type .
+  methods EXPORTING
+    importing
+      !IV_ROWS type I
+    exporting
+      value(ET_VALUES) type TY_TABLE_TYPE .
+  methods RETURN_BY_VALUE
+    importing
+      !IV_ROWS type I
+    returning
+      value(RT_VALUES) type TY_TABLE_TYPE .
 protected section.
 private section.
 ENDCLASS.
@@ -29,7 +30,7 @@ CLASS ZCL_RETURN_TEST IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_value> LIKE LINE OF et_values.
 
-    DO iv_count TIMES.
+    DO iv_rows TIMES.
       APPEND INITIAL LINE TO et_values ASSIGNING <ls_value>.
       <ls_value>-bname = sy-index.
     ENDDO.
@@ -41,7 +42,7 @@ CLASS ZCL_RETURN_TEST IMPLEMENTATION.
 
     FIELD-SYMBOLS: <ls_value> LIKE LINE OF rt_values.
 
-    DO iv_count TIMES.
+    DO iv_rows TIMES.
       APPEND INITIAL LINE TO rt_values ASSIGNING <ls_value>.
       <ls_value>-bname = sy-index.
     ENDDO.
