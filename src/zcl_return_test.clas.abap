@@ -11,7 +11,7 @@ public section.
     importing
       !IV_ROWS type I
     exporting
-      value(ET_VALUES) type TY_TABLE_TYPE .
+      !ET_VALUES type TY_TABLE_TYPE .
   methods RETURN_BY_VALUE
     importing
       !IV_ROWS type I
