@@ -1,7 +1,9 @@
 REPORT zreturn_test.
+* quick and dirty test code
 
-PARAMETERS: p_rows  TYPE i OBLIGATORY DEFAULT 500000,
-            p_times TYPE i OBLIGATORY DEFAULT 1.
+PARAMETERS: p_rows   TYPE i OBLIGATORY DEFAULT 1000000,
+            p_times  TYPE i OBLIGATORY DEFAULT 100,
+            p_detail TYPE c AS CHECKBOX.
 
 
 START-OF-SELECTION.
@@ -18,7 +20,9 @@ FORM run.
   DEFINE _stop.
     GET RUN TIME FIELD t2.
     elapsed = ( t2 - t1 ).
-    WRITE: / elapsed, 'microseconds,', &1.
+    IF p_detail = abap_true.
+      WRITE: / elapsed, 'microseconds,', &1.
+    ENDIF.
     CLEAR lt_tab.
     FREE lt_tab.
   END-OF-DEFINITION.
@@ -36,6 +40,7 @@ FORM run.
 
   CREATE OBJECT lo_return EXPORTING iv_rows = p_rows.
   WRITE: / p_rows, 'rows'.
+  WRITE: / p_times, 'times'.
   WRITE: /.
 
   DO p_times TIMES.
